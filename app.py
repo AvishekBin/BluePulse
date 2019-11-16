@@ -14,13 +14,17 @@ def predict():
     '''
     For rendering results on HTML GUI
     '''
-    int_features = [int(x) for x in request.form.values()]
-    final_features = [np.array(int_features)]
-    prediction = model.predict(final_features)
+    # Get the data from the POST request.
+    data = request.get_json(force=True)
+    
+    #exp = data ['exp']
+    # Make prediction using model loaded from disk as per the data.
+    prediction = model.predict([[np.array(data['exp'])]])
 
-    output = round(prediction[0], 2)
+    # Take the first value of prediction
+    output = prediction[0]
 
-    return render_template('index.html', prediction_text='Employee Salary should be $ {}'.format(output))
+    return jsonify(output)
 
 
 if __name__ == "__main__":
